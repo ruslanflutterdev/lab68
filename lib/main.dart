@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'features/game/view/role_selection_screen.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -11,10 +11,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Онлайн игра Шарады',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const RoleSelectionScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RoleSelectionViewModel()),
+        ChangeNotifierProvider(create: (_) => GameSetupViewModel()),
+        ChangeNotifierProvider(create: (_) => GameViewModel()),
+      ],
+      child: MaterialApp(
+        title: 'Онлайн игра Шарады',
+        theme: ThemeData(primarySwatch: Colors.blue),
+        home: const RoleSelectionScreen(),
+      ),
     );
   }
 }
