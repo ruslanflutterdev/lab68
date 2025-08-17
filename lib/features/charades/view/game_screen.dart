@@ -4,7 +4,6 @@ import '../viewmodels/game_viewmodel.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 
-
 class GameScreen extends StatefulWidget {
   final String gameId;
   final bool isHost;
@@ -34,7 +33,10 @@ class _GameScreenState extends State<GameScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Игра'),
-            Text('Комната: ${widget.gameId}', style: const TextStyle(fontSize: 14)),
+            Text(
+              'Комната: ${widget.gameId}',
+              style: const TextStyle(fontSize: 14),
+            ),
           ],
         ),
       ),
@@ -51,7 +53,10 @@ class _GameScreenState extends State<GameScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Подсказка:', style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  'Подсказка:',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 6),
                 Text(
                   gameData.hint.isNotEmpty
@@ -67,24 +72,31 @@ class _GameScreenState extends State<GameScreen> {
                   style: const TextStyle(fontSize: 24, letterSpacing: 2),
                 ),
                 const SizedBox(height: 24),
-                CustomTextField(controller: _controller, hintText: 'Ваш ответ'),
-                const SizedBox(height: 12),
-                CustomButton(
-                  text: 'Отправить',
-                  onPressed: () async {
-                    final isCorrect = await Provider.of<GameViewModel>(context, listen: false)
-                        .checkAnswer(widget.gameId, _controller.text);
-                    if (!context.mounted) return;
+                if (!widget.isHost) ...[
+                  CustomTextField(
+                    controller: _controller,
+                    hintText: 'Ваш ответ',
+                  ),
+                  const SizedBox(height: 12),
+                  CustomButton(
+                    text: 'Отправить',
+                    onPressed: () async {
+                      final isCorrect = await Provider.of<GameViewModel>(
+                        context,
+                        listen: false,
+                      ).checkAnswer(widget.gameId, _controller.text);
+                      if (!context.mounted) return;
 
-                    final snackbarMessage = isCorrect
-                        ? 'Поздравляем! Вы угадали слово!'
-                        : 'Неверно. Попробуйте еще раз.';
+                      final snackbarMessage = isCorrect
+                          ? 'Поздравляем! Вы угадали слово!'
+                          : 'Неверно. Попробуйте еще раз.';
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(snackbarMessage)),
-                    );
-                  },
-                ),
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(snackbarMessage)));
+                    },
+                  ),
+                ],
                 if (gameData.status == 'finished') ...[
                   const SizedBox(height: 20),
                   const Text(
