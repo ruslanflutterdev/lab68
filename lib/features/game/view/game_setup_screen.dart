@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../viewmodel/game_setup_view_model.dart';
-import '../viewmodel/game_view_model.dart';
+import '../../charades/viewmodels/game_setup_viewmodel.dart';
+import '../../charades/viewmodels/game_viewmodel.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/host_setup_widget.dart';
 import '../widgets/join_setup_widget.dart';
@@ -35,6 +35,7 @@ class GameSetupScreen extends StatelessWidget {
                 final snackbarMessage = viewModel.error != null
                     ? 'Ошибка: ${viewModel.error}'
                     : 'Комната создана: ${viewModel.game!.id}';
+                if(!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(snackbarMessage)),
                 );
@@ -95,10 +96,12 @@ class GameSetupScreen extends StatelessWidget {
           onSubmit: (roomId) async {
             await Provider.of<GameSetupViewModel>(context, listen: false).joinGame(roomId, 'playerB');
             if (viewModel.error != null) {
+              if(!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Ошибка: ${viewModel.error}')),
               );
             } else {
+              if(!context.mounted) return;
               final gameViewModel = Provider.of<GameViewModel>(context, listen: false);
               gameViewModel.subscribeGame(roomId);
               if (!context.mounted) return;

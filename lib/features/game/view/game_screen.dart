@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewmodel/game_view_model.dart';
+import '../../charades/viewmodels/game_viewmodel.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 
