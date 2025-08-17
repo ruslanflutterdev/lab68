@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lab68/features/game/view/game_setup_screen.dart';
-import 'package:lab68/features/game/widgets/custom_button.dart';
+import 'package:lab68/features/charades/view/game_setup_screen.dart';
+import '../widgets/custom_button.dart';
+
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});

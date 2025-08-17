@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lab68/features/game/widgets/custom_button.dart';
-import 'package:lab68/features/game/widgets/custom_text_field.dart';
+import 'package:lab68/features/charades/widgets/custom_button.dart';
+import 'package:lab68/features/charades/widgets/custom_text_field.dart';
+
 
 class JoinSetupWidget extends StatefulWidget {
   final void Function(String roomId)? onSubmit;

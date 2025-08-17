@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lab68/features/game/widgets/custom_button.dart';
+import 'package:lab68/features/charades/widgets/custom_button.dart';
 import 'custom_text_field.dart';
 
 class HostSetupWidget extends StatefulWidget {

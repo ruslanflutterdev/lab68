@@ -7,7 +7,6 @@ class GameSetupViewModel extends ChangeNotifier {
 
   GameModel? game;
   bool isLoading = false;
-  String? error;
 
   Future<void> createGame(String word, String hint) async {
     isLoading = true;
@@ -15,27 +14,25 @@ class GameSetupViewModel extends ChangeNotifier {
 
     try {
       game = await _service.createGame(word, hint);
-      error = null;
     } catch (e) {
-      error = e.toString();
+      rethrow;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    isLoading = false;
-    notifyListeners();
   }
 
-  Future<void> joinGame(String gameId, String playerName) async {
+  Future<void> joinGame(String gameId) async {
     isLoading = true;
     notifyListeners();
 
     try {
-      game = await _service.joinGame(gameId, playerName);
-      error = null;
+      game = await _service.joinGame(gameId);
     } catch (e) {
-      error = e.toString();
+      rethrow;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    isLoading = false;
-    notifyListeners();
   }
 }

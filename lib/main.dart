@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'features/charades/view/role_selection_screen.dart';
 import 'features/charades/viewmodels/role_selection_viewmodel.dart';
 import 'features/charades/viewmodels/game_setup_viewmodel.dart';
 import 'features/charades/viewmodels/game_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // здесь нужно добавить Supabase инициализацию (supabaseUrl, anonKey)
+
+  await Supabase.initialize(
+    url: '',
+    anonKey: '',
+  );
+
   runApp(const MyApp());
 }
 
@@ -28,20 +35,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),
-        home: const PlaceholderScreen(),
-      ),
-    );
-  }
-}
-
-class PlaceholderScreen extends StatelessWidget {
-  const PlaceholderScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("UI здесь"),
+        home: const RoleSelectionScreen(),
       ),
     );
   }

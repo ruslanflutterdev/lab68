@@ -4,46 +4,43 @@ import '../models/game_model.dart';
 class SupabaseService {
   final client = Supabase.instance.client;
 
-  Future<GameModel?> createGame(String word, String hint) async {
-    final response = await client.from('games').insert({
-      'word': word,
-      'hint': hint,
-      'status': 'waiting',
-      'players': [],
-    }).select().single();
-
-    return GameModel.fromMap(response);
+  Future<GameModel> createGame(String word, String hint) async {
+    try {
+      final response = await client
+          .from('games')
+          .insert({'word': word, 'hint': hint, 'status': 'waiting'})
+          .select()
+          .single();
+      return GameModel.fromMap(response);
+    } catch (e) {
+      throw Exception('Не удалось создать игру: $e');
+    }
   }
 
-  Future<GameModel?> joinGame(String gameId, String playerName) async {
-    final existing = await client.from('games').select().eq('id', gameId).single();
-
-    final List<dynamic> currentPlayers = existing['players'] ?? [];
-    if (!currentPlayers.contains(playerName)) {
-      currentPlayers.add(playerName);
+  Future<GameModel> joinGame(String gameId) async {
+    try {
+      final existing = await client
+          .from('games')
+          .select()
+          .eq('id', gameId)
+          .single();
+      return GameModel.fromMap(existing);
+    } catch (e) {
+      throw Exception(
+        'Не удалось подключиться к игре. Возможно, комната с ID "$gameId" не найдена или возникла другая ошибка: ${e.toString()}',
+      );
     }
-
-    final response = await client
-        .from('games')
-        .update({'players': currentPlayers})
-        .eq('id', gameId)
-        .select()
-        .single();
-
-    return GameModel.fromMap(response);
   }
 
   Stream<GameModel> listenGameUpdates(String gameId) {
-    return client
-        .from('games')
-        .stream(primaryKey: ['id'])
-        .eq('id', gameId)
-        .map((event) {
-      if (event.isNotEmpty) {
-        return GameModel.fromMap(event.first);
-      }
-      throw Exception("Game not found");
-    });
+    return client.from('games').stream(primaryKey: ['id']).eq('id', gameId).map(
+      (event) {
+        if (event.isNotEmpty) {
+          return GameModel.fromMap(event.first);
+        }
+        throw Exception("Game not found");
+      },
+    );
   }
 
   Future<bool> checkAnswer(String gameId, String answer) async {
@@ -51,7 +48,10 @@ class SupabaseService {
     final game = GameModel.fromMap(data);
 
     if (game.word.toLowerCase() == answer.toLowerCase()) {
-      await client.from('games').update({'status': 'finished'}).eq('id', gameId);
+      await client
+          .from('games')
+          .update({'status': 'finished'})
+          .eq('id', gameId);
       return true;
     }
     return false;

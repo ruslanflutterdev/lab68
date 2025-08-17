@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../charades/viewmodels/game_viewmodel.dart';
+import '../viewmodels/game_viewmodel.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
+
 
 class GameScreen extends StatefulWidget {
   final String gameId;
